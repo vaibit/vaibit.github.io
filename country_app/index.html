@@ -4,297 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Country Data Viewer</title>
-	<link rel="stylesheet" type="text/css" href="static/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-    <script>
-        let countriesData = [];
-        let map, geoJsonLayer;
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
     
-        // Initialize the map
-        function initMap() {
-    console.log("Map initialized");  // Debugging line
-    map = L.map('map').setView([20, 0], 2);
-
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Call to load the country borders
-    fetchCountryBorders();
-}
-
-window.onload = initMap;
-    
-        // Fetch GeoJSON data for country borders and add to map
-        async function fetchCountryBorders() {
-    console.log("fetchCountryBorders called");  // Debugging line
-
-    try {
-        const response = await fetch("https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json");
-        if (!response.ok) throw new Error("Failed to load GeoJSON");
-
-        const data = await response.json();
-        console.log("GeoJSON data loaded:", data);  // Check if data is loaded
-
-        geoJsonLayer = L.geoJson(data, {
-            style: {
-                color: "#4a90e2",
-                weight: 1,
-                fillOpacity: 0.2
-            },
-            onEachFeature: onEachFeature
-        }).addTo(map);
-    } catch (error) {
-        console.error("Error loading GeoJSON data:", error);
-    }
-}
-    
-        // Function to add click behavior to each country
-        function onEachFeature(feature, layer) {
-            layer.on({
-                click: (e) => onCountryClick(feature)
-            });
-        }
-    
-// Handle country click event
-async function onCountryClick(feature) {
-    const countryName = feature.properties.name;
-    console.log("Country clicked:", countryName);
-
-    document.getElementById("value").value = countryName;
-    document.getElementById("attribute").value = "name";
-    
-    try {
-        // Fetch country data for the selected country
-        const response = await fetch(`/countries?attribute=name&value=${countryName}`);
-        if (!response.ok) throw new Error("Network response was not ok");
-
-        const [countryData] = await response.json(); // Get the first result, assuming unique names
-        console.log("Country data received:", countryData);  // Debugging line
-
-        if (countryData) {
-            // Extract required data
-            const name = countryData.name?.common || "N/A";
-            const flag = countryData.flags?.png || "";
-            const languages = countryData.languages ? Object.values(countryData.languages).join(", ") : "N/A";
-            const currency = countryData.currencies ? Object.keys(countryData.currencies).join(", ") : "N/A";
-            const timezone = countryData.timezones ? countryData.timezones[0] : "N/A";
-
-            // Create the popup content
-            const popupContent = `
-                <div style="text-align: center;">
-                    <h3>${name}</h3>
-                    <img src="${flag}" alt="${name} flag" style="width: 50px; height: auto; margin: 10px 0;">
-                    <p><strong>Language:</strong> ${languages}</p>
-                    <p><strong>Currency:</strong> ${currency}</p>
-                    <p><strong>Timezone:</strong> ${timezone}</p>
-                </div>
-            `;
-
-            // Extract coordinates and ensure the order is [lat, lng] for Leaflet
-            const coordinates = feature.geometry.coordinates;
-            console.log("Coordinates:", coordinates);  // Debugging line
-
-            L.popup({ maxWidth: 200 })
-                .setLatLng([coordinates[1], coordinates[0]])  // Reversing to [lat, lng]
-                .setContent(popupContent)
-                .openOn(map);
-        } else {
-            console.error("No data found for the selected country");
-        }
-    } catch (error) {
-        console.error("Fetch error:", error);
-    }
-}
-
-    
-        async function fetchCountries() {
-            const attribute = document.getElementById("attribute").value;
-            const value = document.getElementById("value").value;
-    
-            try {
-                const response = await fetch(`/countries?attribute=${attribute}&value=${value}`);
-                if (!response.ok) throw new Error("Network response was not ok");
-    
-                countriesData = await response.json();
-                displayResults(countriesData);
-            } catch (error) {
-                console.error("Fetch error:", error);
-                document.getElementById("results").innerHTML = "An error occurred while fetching data.";
-            }
-        }
-    
-        function displayResults(data) {
-            const resultsContainer = document.getElementById("results");
-            resultsContainer.innerHTML = "";
-    
-            if (data.length === 0) {
-                resultsContainer.innerHTML = "<p>No countries found with the specified filter.</p>";
-                return;
-            }
-    
-            // Create a table for the results
-            const table = document.createElement("table");
-            const headerRow = table.insertRow();
-    
-            const headers = [
-                { text: "Country Name", key: "name", type: "string" },
-                { text: "Region", key: "region", type: "string" },
-                { text: "Subregion", key: "subregion", type: "string" },
-                { text: "Languages", key: "languages", type: "string" },
-                { text: "Population", key: "population", type: "number" },
-                { text: "Capital", key: "capital", type: "string" }
-            ];
-    
-            headers.forEach(header => {
-                const th = document.createElement("th");
-                th.textContent = header.text;
-                th.style.cursor = "pointer";
-                th.onclick = () => sortTable(header.key, header.type);
-                headerRow.appendChild(th);
-            });
-    
-            data.forEach(country => {
-                const row = table.insertRow();
-                row.insertCell().textContent = country.name.common || "N/A";
-                row.insertCell().textContent = country.region || "N/A";
-                row.insertCell().textContent = country.subregion || "N/A";
-                row.insertCell().textContent = country.languages ? Object.values(country.languages).join(", ") : "N/A";
-                row.insertCell().textContent = country.population ? country.population.toLocaleString() : "N/A";
-                row.insertCell().textContent = country.capital ? country.capital.join(", ") : "N/A";
-            });
-    
-            resultsContainer.appendChild(table);
-        }
-    
-
-
-        async function onCountryClick(feature) {
-    const countryName = feature.properties.name;
-    console.log("Country clicked:", countryName);
-
-    const requestUrl = `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}`;
-    console.log("Request URL:", requestUrl);
-
-    try {
-        const response = await fetch(requestUrl);
-        if (!response.ok) throw new Error("Network response was not ok");
-
-        const countries = await response.json();
-        console.log("Countries received:", countries);
-
-        // Find the exact match
-        const countryData = countries.find(
-            country => country.name.common.toLowerCase() === countryName.toLowerCase()
-        );
-
-        if (countryData) {
-            const name = countryData.name.common;
-            const flag = `https://flagcdn.com/${countryData.cca2.toLowerCase()}.svg`;
-            const languages = countryData.languages ? Object.values(countryData.languages).join(", ") : "N/A";
-            const currency = countryData.currencies ? Object.keys(countryData.currencies).join(", ") : "N/A";
-            const timezone = countryData.timezones ? countryData.timezones[0] : "N/A";
-            const population = countryData.population ? countryData.population.toLocaleString() : "N/A"; // Format population with commas
-
-            // Create the popup content with population included
-            const popupContent = `
-                <div style="text-align: center;">
-                    <h3>${name}</h3>
-                    <img src="${flag}" alt="${name} flag" style="width: 50px; height: auto; margin: 10px 0;">
-                    <p><strong>Population:</strong> ${population}</p>
-                    <p><strong>Language:</strong> ${languages}</p>
-                    <p><strong>Currency:</strong> ${currency}</p>
-                    <p><strong>Timezone:</strong> ${timezone}</p>
-                </div>
-            `;
-
-            const [lat, lng] = countryData.latlng || [0, 0];
-            console.log("Popup coordinates:", lat, lng);
-
-            L.popup({ maxWidth: 200 })
-                .setLatLng([lat, lng])
-                .setContent(popupContent)
-                .openOn(map);
-        } else {
-            console.error("Exact match not found for the selected country");
-        }
-    } catch (error) {
-        console.error("Fetch error:", error);
-    }
-}
-
-async function fetchCountryBorders() {
-    try {
-        const response = await fetch("https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json");
-        const data = await response.json();
-        geoJsonLayer = L.geoJson(data, {
-            style: {
-                color: "#4a90e2",
-                weight: 1,
-                fillOpacity: 0.2
-            },
-            onEachFeature: onEachFeature  // Add click interaction
-        }).addTo(map);
-    } catch (error) {
-        console.error("Error loading GeoJSON data:", error);
-    }
-}
-
-// Function to add click behavior to each country
-function onEachFeature(feature, layer) {
-    console.log("onEachFeature called for:", feature.properties.name);  // Debugging line
-    layer.on({
-        click: (e) => onCountryClick(feature)
-    });
-}
-
-
-
-
-    </script>
 </head>
 <body>
     <h1>Country Data Viewer</h1>
 
     <!-- Filter Dropdowns -->
     <div class="dropdown-container">
-    <label for="region">Region:</label>
-    <select id="region" onchange="updateSubregionOptions()">
-        <option value="">Select Region</option>
-    </select>
+        <label for="region">Region:</label>
+        <select id="region" onchange="updateSubregionOptions(); updateCountryOptions();">
+            <option value="">Select Region</option>
+        </select>
+        
+        <label for="subregion">Subregion:</label>
+        <select id="subregion" onchange="updateCountryOptions()">
+            <option value="">Select Subregion</option>
+        </select>
 
-    <label for="subregion">Subregion:</label>
-    <select id="subregion" onchange="updateLanguageAndCurrencyOptions()">
-        <option value="">Select Subregion</option>
-    </select>
+        <label for="country">Country:</label>
+        <select id="country" onchange="filterCountries()">
+            <option value="">Select Country</option>
+        </select>
+    </div>
 
-    <label for="language">Language:</label>
-    <select id="language" onchange="filterCountries()">
-        <option value="">Select Language</option>
-    </select>
-
-
+    <!-- Map and Reset Button -->
     <div id="map" style="height: 500px; margin-top: 20px;"></div>
+    <button onclick="resetMap()">Reset Map</button>
     <div id="results"></div>
+
 
     <script>
         let countries = [];
+        let map, markerGroup;
 
-        // Fetch all country data once and populate the region dropdown
+        // Initialize the map
+        function initMap() {
+            console.log("Map initialized");
+            map = L.map('map').setView([20, 0], 2);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            fetchCountryBorders();
+        }
+
+        // Reset the map and dropdowns
+        function resetMap() {
+            if (markerGroup) {
+                markerGroup.clearLayers();
+            }
+            map.setView([20, 0], 2);
+            document.getElementById("region").value = "";
+            document.getElementById("subregion").value = "";
+            document.getElementById("country").value = "";
+        }
+
+        // Populate initial data for dropdowns
         async function populateInitialData() {
             const response = await fetch('https://restcountries.com/v3.1/all');
             countries = await response.json();
-
-            // Populate Region dropdown with unique values
             const regions = Array.from(new Set(countries.map(country => country.region).filter(Boolean))).sort();
             populateDropdown('region', regions);
         }
 
-        // Populate a dropdown with values
         function populateDropdown(id, values) {
             const dropdown = document.getElementById(id);
             dropdown.innerHTML = `<option value="">Select ${id.charAt(0).toUpperCase() + id.slice(1)}</option>`;
@@ -306,95 +85,131 @@ function onEachFeature(feature, layer) {
             });
         }
 
-        // Update Subregion options based on the selected Region
         function updateSubregionOptions() {
             const selectedRegion = document.getElementById('region').value;
             const filteredCountries = countries.filter(country => country.region === selectedRegion);
-
-            // Get unique subregions within the selected region
             const subregions = Array.from(new Set(filteredCountries.map(country => country.subregion).filter(Boolean))).sort();
             populateDropdown('subregion', subregions);
-
-            // Clear and repopulate Language and Currency dropdowns
-            populateDropdown('language', []);
-            populateDropdown('currency', []);
+            populateDropdown('country', []);
         }
 
-        // Update Language and Currency options based on selected Subregion
-        function updateLanguageAndCurrencyOptions() {
-            const selectedRegion = document.getElementById('region').value;
-            const selectedSubregion = document.getElementById('subregion').value;
-            const filteredCountries = countries.filter(country =>
-                country.region === selectedRegion && country.subregion === selectedSubregion
-            );
+        function updateCountryOptions() {
+    const selectedRegion = document.getElementById('region').value;
+    const selectedSubregion = document.getElementById('subregion').value;
 
-            // Extract unique languages and currencies within the selected subregion
-            const languages = new Set();
-            const currencies = new Set();
-            filteredCountries.forEach(country => {
-                if (country.languages) {
-                    Object.values(country.languages).forEach(lang => languages.add(lang));
-                }
-                if (country.currencies) {
-                    Object.keys(country.currencies).forEach(curr => currencies.add(curr));
-                }
-            });
+    // Filter countries based on selected region and subregion if they are set
+    const filteredCountries = countries.filter(country =>
+        (!selectedRegion || country.region === selectedRegion) &&
+        (!selectedSubregion || country.subregion === selectedSubregion)
+    );
 
-            // Populate Language and Currency dropdowns with unique values
-            populateDropdown('language', Array.from(languages).sort());
-            populateDropdown('currency', Array.from(currencies).sort());
-        }
+    // Get unique country names from the filtered list
+    const countryNames = Array.from(new Set(filteredCountries.map(country => country.name.common).filter(Boolean))).sort();
 
-        // Filter countries based on selected dropdown values and display results
+    // Populate the Country dropdown
+    populateDropdown('country', countryNames);
+}
+
+
         function filterCountries() {
             const region = document.getElementById("region").value;
             const subregion = document.getElementById("subregion").value;
-            const language = document.getElementById("language").value;
-            const currency = document.getElementById("currency").value;
+            const countryName = document.getElementById("country").value;
 
             const filteredCountries = countries.filter(country => {
                 return (!region || country.region === region) &&
                        (!subregion || country.subregion === subregion) &&
-                       (!language || (country.languages && Object.values(country.languages).includes(language))) &&
-                       (!currency || (country.currencies && country.currencies[currency]));
+                       (!countryName || country.name.common === countryName);
             });
 
-            displayResults(filteredCountries);
+            addCountryMarkers(filteredCountries);
         }
 
-        // Display filtered countries in the results area
-        function displayResults(data) {
-            const resultsContainer = document.getElementById("results");
-            resultsContainer.innerHTML = "";
-
-            if (data.length === 0) {
-                resultsContainer.innerHTML = "<p>No countries found with the specified filter.</p>";
-                return;
+        function addCountryMarkers(countries) {
+            if (markerGroup) {
+                markerGroup.clearLayers();
             }
-
-            const table = document.createElement("table");
-            const headerRow = table.insertRow();
-
-            ["Country Name", "Region", "Subregion", "Languages", "Population", "Capital"].forEach(headerText => {
-                const header = document.createElement("th");
-                header.textContent = headerText;
-                headerRow.appendChild(header);
+            markerGroup = L.layerGroup();
+            countries.forEach(country => {
+                const [lat, lng] = country.latlng || [0, 0];
+                const marker = L.marker([lat, lng]).addTo(markerGroup);
+                marker.bindPopup(`
+                    <div style="text-align: center;">
+                        <h3>${country.name.common}</h3>
+                        <img src="https://flagcdn.com/${country.cca2.toLowerCase()}.svg" alt="${country.name.common} flag" style="width: 50px; height: auto; margin: 10px 0;">
+                        <p><strong>Population:</strong> ${country.population ? country.population.toLocaleString() : "N/A"}</p>
+                        <p><strong>Region:</strong> ${country.region || "N/A"}</p>
+                        <p><strong>Subregion:</strong> ${country.subregion || "N/A"}</p>
+                        <p><strong>Timezone:</strong> ${country.timezones ? country.timezones[0] : "N/A"}</p>
+                    </div>
+                `);
             });
-
-            data.forEach(country => {
-                const row = table.insertRow();
-                row.insertCell().textContent = country.name.common || "N/A";
-                row.insertCell().textContent = country.region || "N/A";
-                row.insertCell().textContent = country.subregion || "N/A";
-                row.insertCell().textContent = country.languages ? Object.values(country.languages).join(", ") : "N/A";
-                row.insertCell().textContent = country.population ? country.population.toLocaleString() : "N/A";
-                row.insertCell().textContent = country.capital ? country.capital.join(", ") : "N/A";
-            });
-
-            resultsContainer.appendChild(table);
+            markerGroup.addTo(map);
         }
 
-        // Populate initial data on page load
+        async function fetchCountryBorders() {
+            console.log("Fetching country borders");
+            try {
+                const response = await fetch("https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json");
+                const data = await response.json();
+                L.geoJson(data, {
+                    style: {
+                        color: "#4a90e2",
+                        weight: 1,
+                        fillOpacity: 0.2
+                    },
+                    onEachFeature: onEachFeature
+                }).addTo(map);
+            } catch (error) {
+                console.error("Error loading GeoJSON data:", error);
+            }
+        }
+
+        function onEachFeature(feature, layer) {
+            layer.on({
+                click: () => onCountryClick(feature)
+            });
+        }
+
+        async function onCountryClick(feature) {
+            const countryName = feature.properties.name;
+            const requestUrl = `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}`;
+            try {
+                const response = await fetch(requestUrl);
+                const countries = await response.json();
+                const countryData = countries.find(country => country.name.common.toLowerCase() === countryName.toLowerCase());
+
+                if (countryData) {
+                    const name = countryData.name.common;
+                    const flag = `https://flagcdn.com/${countryData.cca2.toLowerCase()}.svg`;
+                    const languages = countryData.languages ? Object.values(countryData.languages).join(", ") : "N/A";
+                    const currency = countryData.currencies ? Object.keys(countryData.currencies).join(", ") : "N/A";
+                    const timezone = countryData.timezones ? countryData.timezones[0] : "N/A";
+                    const population = countryData.population ? countryData.population.toLocaleString() : "N/A";
+
+                    const popupContent = `
+                        <div style="text-align: center;">
+                            <h3>${name}</h3>
+                            <img src="${flag}" alt="${name} flag" style="width: 50px; height: auto; margin: 10px 0;">
+                            <p><strong>Population:</strong> ${population}</p>
+                            <p><strong>Language:</strong> ${languages}</p>
+                            <p><strong>Currency:</strong> ${currency}</p>
+                            <p><strong>Timezone:</strong> ${timezone}</p>
+                        </div>
+                    `;
+
+                    L.popup({ maxWidth: 200 })
+                        .setLatLng(countryData.latlng)
+                        .setContent(popupContent)
+                        .openOn(map);
+                } else {
+                    console.error("Exact match not found for the selected country");
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+            }
+        }
+
         window.onload = () => {
             initMap();
             populateInitialData();

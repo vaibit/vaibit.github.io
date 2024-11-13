@@ -208,46 +208,74 @@
                 click: () => onCountryClick(feature)
             });
         }
+
+    //custom timezones where there is data discrepancy 
+    const customTimezones = {
+    "United Kingdom": "UTC+00:00",  // Adjust to UTC+0 for UK
+    "Brazil": "UTC-03:00",          // Add any additional overrides as needed
+    // Add other countries with incorrect data if you find more
+};
     
-        async function onCountryClick(feature) {
-            const countryName = feature.properties.name;
-            const requestUrl = `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}`;
-            try {
-                const response = await fetch(requestUrl);
-                const countries = await response.json();
-                const countryData = countries.find(country => country.name.common.toLowerCase() === countryName.toLowerCase());
-    
-                if (countryData) {
-                    const name = countryData.name.common;
-                    const flag = `https://flagcdn.com/${countryData.cca2.toLowerCase()}.svg`;
-                    const languages = countryData.languages ? Object.values(countryData.languages).join(", ") : "N/A";
-                    const currency = countryData.currencies ? Object.keys(countryData.currencies).join(", ") : "N/A";
-                    const timezone = countryData.timezones ? countryData.timezones[0] : "N/A";
-                    const population = countryData.population ? countryData.population.toLocaleString() : "N/A";
-    
-                    const popupContent = `
-                        <div style="text-align: center;">
-                            <h3>${name}</h3>
-                            <img src="${flag}" alt="${name} flag" style="width: 50px; height: auto; margin: 10px 0;">
-                            <p><strong>Population:</strong> ${population}</p>
-                            <p><strong>Language:</strong> ${languages}</p>
-                            <p><strong>Currency:</strong> ${currency}</p>
-                            <p><strong>Timezone:</strong> ${timezone}</p>
-                        </div>
-                    `;
-    
-                    L.popup({ maxWidth: 200 })
-                        .setLatLng(countryData.latlng)
-                        .setContent(popupContent)
-                        .openOn(map);
-                } else {
-                    console.error("Exact match not found for the selected country");
-                }
-            } catch (error) {
-                console.error("Fetch error:", error);
-            }
+       
+    async function onCountryClick(feature) {
+    const countryName = feature.properties.name;
+    const requestUrl = `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}`;
+    try {
+        const response = await fetch(requestUrl);
+        const countries = await response.json();
+        const countryData = countries.find(country => country.name.common.toLowerCase() === countryName.toLowerCase());
+
+        if (countryData) {
+            const name = countryData.name.common;
+            const flag = `https://flagcdn.com/${countryData.cca2.toLowerCase()}.svg`;
+            const languages = countryData.languages ? Object.values(countryData.languages).join(", ") : "N/A";
+            const currency = countryData.currencies ? Object.keys(countryData.currencies).join(", ") : "N/A";
+            const timezone = customTimezones[name] || (countryData.timezones ? countryData.timezones[0] : "UTC"); // Use custom timezone if available
+            const population = countryData.population ? countryData.population.toLocaleString() : "N/A";
+
+            // Calculate local time using the correct timezone
+            const localTime = getLocalTime(timezone);
+
+            const popupContent = `
+                <div style="text-align: left;">
+                    <h3>${name}</h3>
+                    <img src="${flag}" alt="${name} flag" style="width: 50px; height: auto; margin: 10px 0;">
+                    <p><strong>Language:</strong> ${languages}</p>
+                    <p><strong>Currency:</strong> ${currency}</p>
+                    <p><strong>Population:</strong> ${population}</p>
+                    <p><strong>Timezone:</strong> ${timezone}</p>
+                    <p><strong>Local Time:</strong> ${localTime}</p>
+                </div>
+            `;
+
+            L.popup({ maxWidth: 200 })
+                .setLatLng(countryData.latlng)
+                .setContent(popupContent)
+                .openOn(map);
+        } else {
+            console.error("Exact match not found for the selected country");
         }
-    
+    } catch (error) {
+        console.error("Fetch error:", error);
+    }
+}
+
+// Adjust the getLocalTime function as before
+function getLocalTime(timezone) {
+    const now = new Date();
+    const offset = timezone.match(/UTC([+-]\d{2}):?(\d{2})?/);
+
+    if (offset) {
+        const hours = parseInt(offset[1], 10);
+        const minutes = offset[2] ? parseInt(offset[2], 10) : 0;
+        now.setUTCHours(now.getUTCHours() + hours);
+        now.setUTCMinutes(now.getUTCMinutes() + minutes);
+    }
+
+    return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+   
         window.onload = () => {
             initMap();
             populateInitialData();

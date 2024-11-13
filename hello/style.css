@@ -1,0 +1,437 @@
+/* Reset some default browser styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Apply a background color and center the content */
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #333;
+}
+
+/* Style the heading */
+h1 {
+    font-size: 3rem;
+    color: #fbff00;
+    margin-bottom: 10px;
+}
+
+/* Style the paragraph */
+p {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+/* Section container */
+.intro {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card styling */
+.card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Heading inside the card */
+.card h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Paragraph inside the card */
+.card p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+/* Button styling */
+.cta-button {
+    background-color: #b294fa;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #357ABD;
+}
+/* Responsive styling for smaller screens */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .card {
+        max-width: 90%;
+        padding: 15px;
+    }
+
+    .card h2 {
+        font-size: 1.5rem;
+    }
+
+    .card p {
+        font-size: 0.9rem;
+    }
+
+    .cta-button {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
+/* Button animation */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.cta-button {
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Set up a grid layout for the entire page */
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 200px 1fr;
+    grid-template-areas:
+        "header header"
+        "sidebar main-content"
+        "footer footer";
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+/* Grid areas */
+.header {
+    grid-area: header;
+    background-color: #b294fa;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    background-color: #f0f8ff;
+    padding: 20px;
+}
+
+.main-content {
+    grid-area: main-content;
+    padding: 20px;
+}
+
+.footer {
+    grid-area: footer;
+    background-color: #b294fa;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Existing styling for the card, button, etc., remains the same */
+
+/* Add gap between grid items */
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 200px 1fr;
+    grid-template-areas:
+        "header header"
+        "sidebar main-content"
+        "footer footer";
+    grid-gap: 20px; /* Adds space between grid items */
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 800px) {
+    /* Stack sidebar and main content vertically on smaller screens */
+    body {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr 1fr auto;
+        grid-template-areas:
+            "header"
+            "main-content"
+            "sidebar"
+            "footer";
+    }
+
+    /* Sidebar adjustment for smaller screens */
+    .sidebar {
+        padding: 15px;
+        text-align: center;
+        background-color: #f8f9fa;
+    }
+}
+
+/* Specific layout and styling for grid areas */
+.header {
+    grid-area: header;
+    background-color: #b294fa;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    font-size: 1.5rem;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    background-color: #f0f8ff;
+    padding: 20px;
+}
+
+.main-content {
+    grid-area: main-content;
+    padding: 20px;
+}
+
+.footer {
+    grid-area: footer;
+    background-color: #b294fa;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+/* Existing card and button styles remain the same */
+/* Features Section */
+.features {
+    grid-area: main-content;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.features h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Features grid layout */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.feature-item {
+    background-color: #b294fa;
+    color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Contact Us Section */
+.contact {
+    grid-area: footer;
+    background-color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-top: 2px solid #b294fa;
+    margin-top: 20px;
+}
+
+.contact h2 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.contact p {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* Styling for contact link */
+.contact a {
+    color: #b294fa;
+    text-decoration: none;
+}
+
+.contact a:hover {
+    text-decoration: underline;
+}
+
+/* Hover effect on feature items */
+.feature-item {
+    background-color: #b294fa;
+    color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px); /* Slight upward movement on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Adds a shadow for depth */
+}
+
+/* Fade-in animation for the intro card */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 1s ease-out; /* Applies fade-in effect */
+}
+
+/* Animation for scroll effect */
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Initial state for feature items before they scroll into view */
+.feature-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Trigger animation when in view */
+.feature-item.in-view {
+    animation: slideIn 0.6s ease forwards;
+    opacity: 1;
+    transform: translateY(0);
+}
+/* Contact Link Hover Effect */
+.contact a {
+    color: #b294fa;
+    text-decoration: none;
+    position: relative;
+}
+
+.contact a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background-color: #b294fa;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.contact a:hover::after {
+    transform: scaleX(1);
+}
+
+/* Button Enhancement */
+.cta-button {
+    background-color: #b294fa;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.cta-button:hover {
+    background-color: #357ABD;
+    transform: translateY(-2px);
+}
+html {
+    scroll-behavior: smooth;
+}
+/* Sticky Navigation Bar */
+.navbar {
+    position: sticky;
+    top: 0;
+    background-color: #b294fa;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.navbar a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: #ffeb3b;
+}
+/* Parallax Background */
+.header {
+    background-image: url('https://img.freepik.com/free-vector/ornamental-vintage-wallpaper-concept_23-2148641505.jpg?t=st=1731429552~exp=1731433152~hmac=5efd38169d04dbe7e0cfeae3de5faba9b899617e99e6eb83f0eb9702cd8168bf&w=1380'); /* Replace with a real image URL */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
+    padding: 60px 20px;
+    text-align: center;
+}
+/* Background Animation for Header */
+@keyframes moveBackground {
+    0% {
+        background-position: center top;
+    }
+    100% {
+        background-position: center bottom;
+    }
+}
+
+.header {
+    animation: moveBackground 10s infinite alternate linear;
+}

@@ -1,15 +1,17 @@
 body {
     font-family: Arial, sans-serif;
+    font-size: 1em; /* Default text size for readability */
     margin: 0;
     padding: 0;
+    line-height: 1.5;
     background-color: #dfdfdf;
     color: #333;
     text-align: center;
 }
 
 #map {
-    height: 500px;
-    width: 1024px;
+    height: 400px;
+    width: 80vw;
     margin: auto;
     border-radius: 25px;
     border: 2px solid #000000;
@@ -29,7 +31,88 @@ body {
     }
 }
 
+/* Media query for devices smaller than 768px */
+@media (max-width: 768px) {
+    .slider-container {
+        padding: 10px;
+    }
 
+    #slider-image {
+        width: 30px; /* Smaller slider image */
+    }
+
+    #chart-toggle-container {
+        margin: 10px auto;
+    }
+
+    #flag-bar-chart {
+        display: flex;
+        flex-wrap: wrap; /* Wrap bars on smaller screens */
+        justify-content: flex-start; /* Align bars to the left */
+        align-items: flex-end; /* Align flags at the bottom */
+        gap: 5px; /* Reduce gaps between bars */
+        margin: 10px auto;
+        padding: 10px;
+        max-width: 100%; /* Full width on mobile */
+        height: auto; /* Dynamic height */
+    }
+    
+    .flag-bar {
+        width: calc(10vw - 5px); /* Responsive width */
+        max-width: 40px; /* Prevent bars from growing too large */
+        text-align: center;
+    }
+    
+    .flag-bar img {
+        width: 100%; /* Match bar width */
+        max-height: 20px; /* Smaller flags for compact look */
+        margin: 1px 0; /* Minimal spacing */
+        object-fit: cover; /* Ensure no distortion */
+        border-radius: 2px; /* Optional rounded corners */
+    }
+    
+.flag-bar span {  /* Country names */
+    font-size: 0.2em; /* Compact text for ISO codes */
+    font-weight: bold;
+    margin-top: 2px;
+    word-wrap: break-word; /* Handle long text */
+    text-align: center;
+
+    }
+
+    .footer-links {
+        flex-wrap: wrap; /* Stack footer links */
+        gap: 10px;
+    }
+
+    .footer-links li {
+        width: 100%;
+        text-align: center; /* Center align links */
+    }
+
+    .counter {
+        font-size: 1em; /* Reduce counter size */
+    }
+}
+
+/* Media query for devices smaller than 480px */
+@media (max-width: 480px) {
+    #map {
+        height: 200px; /* Further reduce map height */
+    }
+
+    .slider-container {
+        flex-direction: column; /* Stack slider components */
+    }
+
+    #flag-bar-chart {
+        flex-direction: column; /* Stack bars vertically */
+    }
+
+    .flag-bar {
+        width: 30px; /* Further reduce bar width */
+    }
+}
 
  /*********************************************** SLIDER **********************************************/ 
 
@@ -39,13 +122,13 @@ body {
 }
 
 .range-slider {
-    width: 1000px;
+    width: 80vw;
     margin: 20px auto;
     position: relative;
 }
 
 .range-slider__range {
-    width: 1000px;
+    width: 80vw;
     -webkit-appearance: none;
     background: #524e4e;
     height: 5px;

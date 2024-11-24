@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+        .slider-container {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .counter {
+            margin: 10px auto;
+            text-align: center;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Travels Over the Past Years</h1>
+    <div id="map"></div>
+    <div class="slider-container">
+        <input type="range" id="year-slider" min="1989" max="2024" step="1" value="1989" />
+        <p>Year: <span id="selected-year">1989</span></p>
+    </div>
+    <div class="counter">
+        Countries Visited: <span id="country-count">0</span>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        const map = L.map('map').setView([20, 0], 2); // Center the map
+
+        // Add a tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Example travel data
+        const travelData = {
+            1989: ["Germany", "United Kingdom"],
+            1990: ["United States"],
+            1991: ["France", "Spain"],
+            2024: ["Japan"],
+            // Add more years and countries
+        };
+
+        let geojsonLayer = null; // To hold the current highlighted countries
+
+        // Fetch GeoJSON data once and reuse it
+        let geojsonData = null;
+        fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
+            .then(response => response.json())
+            .then(data => {
+                geojsonData = data;
+                highlightCountries(document.getElementById('year-slider').value); // Highlight initial year
+            });
+
+        // Highlight visited countries up to the selected year
+        const highlightCountries = (currentYear) => {
+            // Collect all visited countries up to the current year
+            const visitedCountries = [];
+            for (let year = 1989; year <= currentYear; year++) {
+                if (travelData[year]) {
+                    visitedCountries.push(...travelData[year]);
+                }
+            }
+
+            // Remove duplicates from the visited countries list
+            const uniqueCountries = [...new Set(visitedCountries)];
+
+            // Update the country counter
+            document.getElementById('country-count').textContent = uniqueCountries.length;
+
+            // Remove the old layer if it exists
+            if (geojsonLayer) {
+                map.removeLayer(geojsonLayer);
+            }
+
+            // Filter GeoJSON to include only visited countries
+            const filteredGeoJSON = {
+                type: "FeatureCollection",
+                features: geojsonData.features.filter(feature =>
+                    uniqueCountries.includes(feature.properties.name)
+                )
+            };
+
+            // Add the filtered GeoJSON layer to the map
+            geojsonLayer = L.geoJSON(filteredGeoJSON, {
+                style: {
+                    color: 'red',
+                    weight: 2,
+                    fillOpacity: 0.5
+                }
+            }).addTo(map);
+        };
+
+        // Update map on slider change
+        const yearSlider = document.getElementById('year-slider');
+        const selectedYear = document.getElementById('selected-year');
+        yearSlider.addEventListener('input', () => {
+            const year = parseInt(yearSlider.value);
+            selectedYear.textContent = year;
+            highlightCountries(year); // Update highlighted countries
+        });
+    </script>
+<footer>
+    <div class="footer-container">
+        <p>Explore Other Versions:</p>
+        <ul class="footer-links">
+            <li><a href="version1.html">v1</a></li>
+            <li><a href="version2.html">v2</a></li>
+            <li><a href="version3.html">v3</a></li>
+            <li><a href="version4.html">v4</a></li>
+            <li><a href="version5.html">v5</a></li>
+            <li><a href="version_latest.html">Current Version</a></li>
+        </ul>
+    </div>
+</footer>
+
+
+<style>
+    footer {
+        margin-top: 30px;
+        padding: 15px 20px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+    }
+    .footer-container p {
+        margin: 0;
+        font-size: 1em;
+        font-weight: bold;
+    }
+    .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0 0;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+    .footer-links li {
+        margin: 0;
+    }
+    .footer-links a {
+        text-decoration: none;
+        color: #FFD700;
+        font-size: 1.1em;
+        font-weight: bold;
+        padding: 5px 10px;
+        border: 1px solid transparent;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+    .footer-links a:hover {
+        color: #fff;
+        background-color: #FFD700;
+        border-color: #FFD700;
+    }
+</style>
+
+
+</body>
+</html>
+
+

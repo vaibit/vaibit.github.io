@@ -1,0 +1,227 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #dfdfdf;
+    color: #333;
+    text-align: center;
+}
+
+#map {
+    height: 500px;
+    width: 1024px;
+    margin: auto;
+    border-radius: 25px;
+    border: 2px solid #000000;
+    padding: 20px;
+}
+
+/*Mobile friendly*/
+@media (max-width: 768px) {
+    #map {
+        height: 300px;
+    }
+    .footer-links {
+        flex-wrap: wrap;
+    }
+    .footer-links li {
+        margin: 5px;
+    }
+}
+
+
+
+ /*********************************************** SLIDER **********************************************/ 
+
+.slider-container, .legend {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.range-slider {
+    width: 1000px;
+    margin: 20px auto;
+    position: relative;
+}
+
+.range-slider__range {
+    width: 1000px;
+    -webkit-appearance: none;
+    background: #524e4e;
+    height: 5px;
+    border-radius: 5px;
+    outline: none;
+    transition: background 0.3s;
+}
+
+.range-slider__range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px; /* Adjust to match your image size */
+    height: 24px;
+    background: url('images/plane-alt.png') no-repeat center;
+    background-size: contain; /* Ensures the image fits inside the thumb */
+    border: none;
+    cursor: pointer;
+}
+
+.range-slider__range::-moz-range-thumb {
+    width: 30px; /* Adjust to match your image size */
+    height: 30px;
+    background: url('images/plane-alt.png') no-repeat center;
+    background-size: contain;
+    border: none;
+    cursor: pointer;
+}
+
+
+.range-slider__range::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+
+
+#slider-plane-container {
+    position: relative;
+    height: 40px; /* Adjust as needed */
+    margin-bottom: -30px; /* Adjust to bring closer to the slider */
+}
+
+#slider-plane {
+    position: absolute;
+    width: 30px; /* Adjust size */
+    height: auto; /* Maintain aspect ratio */
+    transition: transform 0.3s ease, left 0.3s ease; /* Smooth animation */
+}
+
+.range-slider__range {
+    position: relative;
+    width: 100%;
+}
+
+
+.counter {
+    text-align: center;
+    margin: 20px auto;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+
+/*Flag bar chart*/
+#flag-bar-chart {
+    display: flex;
+    justify-content: flex-start; /* Align bars horizontally */
+    align-items: flex-end; /* Align flags at the bottom */
+    gap: 20px; /* Add spacing between bars */
+    margin: 20px auto;
+    padding: 60px;
+    max-width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    height: 200px; /* Set a fixed height for the chart */
+}
+
+.flag-bar {
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse; /* Stack flags from bottom to top */
+    align-items: center;
+    width: 50px; /* Fixed bar width */
+}
+
+.flag-bar img {
+    width: 80%;
+    height: auto;
+    max-height: 30px; /* Fixed height for flags */
+    margin: 2px 0; /* Add spacing between flags */
+    border: 1px solid #ddd;
+    border-radius: 2px;
+}
+
+.flag-bar span {
+    position: absolute;
+    margin: -10px;
+    bottom: -20px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+}
+
+#chart-toggle-container {
+    text-align: center;
+    margin: 20px auto;
+}
+
+#toggle-chart-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+
+/*BUTTON*/
+
+button {color:#454545;background:transparent;border-width:2px;border-style: solid;border-color: #454545;position:relative;margin:1em;display:inline-block;padding:0.5em 1em;transition:all 0.3s ease-in-out;text-align:center;
+    font-family:comfortaa;font-weight:bold}
+    button:before, button:after {content:'';display:block;position:absolute;border-color:#454545;box-sizing:border-box;border-style:solid;width:1em;height:1em;transition:all 0.3s ease-in-out}
+    button:before {top:-6px;left:-6px;border-width:2px 0 0 2px;z-index:5;}
+    button:after {bottom:-6px;right:-6px;border-width:0 2px 2px 0;}
+    button:hover:before, button:hover:after {width:calc(100% + 12px);
+      height:calc(100% + 12px);border-color:#fff}
+    button:hover {color:#353535;background-color:#fff;border-color:#fff}
+    .panel {max-width:960px;text-align:center;position:relative;margin:auto;}
+    
+ /*********************************************** FOOTER **********************************************/ 
+
+footer {
+    margin-top: 30px;
+    padding: 15px 20px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+}
+
+.footer-container p {
+    margin: 0;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer-links li {
+    margin: 0;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #FFD700;
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 5px 10px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #fff;
+    background-color: #FFD700;
+    border-color: #FFD700;
+}

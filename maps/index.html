@@ -3,57 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Map Progress</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
-        main {
-            padding: 20px;
-            max-width: 800px;
-            margin: auto;
-        }
-        .version-list {
-            list-style: none;
-            padding: 0;
-        }
-        .version-list li {
-            margin: 10px 0;
-        }
-        .version-list a {
-            text-decoration: none;
-            color: #007BFF;
-            font-weight: bold;
-        }
-        .version-list a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <title>Vai Travel Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
 </head>
+<header>
+    <h1>Vai Travel Map</h1>
+
 <body>
-    <header>
-        <h1>Travel Map Project</h1>
-        <p>Showcasing the progress of my interactive travel map project!</p>
-    </header>
-    <main>
-        <h2>Versions</h2>
-        <ul class="version-list">
-            <li><a href="version1.html" target="_blank">Version 1: Basic Map with Slider</a></li>
-            <li><a href="version2.html" target="_blank">Version 2: Improved Styling and CartoDB Map</a></li>
-            <li><a href="version3.html" target="_blank">Version 3: Highlighting Countries with Visits</a></li>
-            <li><a href="version4.html" target="_blank">Version 4: Dynamic Country Counter</a></li>
-            <li><a href="version_latest.html" target="_blank">Version 5: Final Design with CartoDB and Features</a></li>
+    <div id="map"></div>
+    <div class="slider-container range-slider">
+        <input class="range-slider__range" id="year-slider" type="range" min="1989" max="2024" step="1" value="1989" />
+        <p>Year: <span id="selected-year">1989</span></p>
+    </div>
+    <div class="counter">
+        Countries Visited: <span id="country-count">0</span>
+    </div>
+
+    <div id="chart-toggle-container">
+        <button id="toggle-chart-btn">Show Flag Bar Chart</button>
+    </div>
+    <div id="flag-bar-chart" style="display: none;"></div>
+    
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+
+
+        // Initialize the map
+        const map = L.map('map').setView([20, 0], 2); // Center the map
+
+        // Add a CartoDB Positron tile layer
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.carto.com/">CARTO</a> contributors',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Travel data
+        const travelData = {
+            1989: ["Lithuania"], //Born
+            2000: ["Ireland"], //?? Visited mother in Ireland. Several times, need to confirm exact years. 
+            2005: ["Germany"], //Karate camp :D
+            2009: ["Germany", "Poland", "United Kingdom", "Ireland"], //konferencja biznesowa [PL], Hamburg, London, moved to Ireland
+            2010: ["Lithuania"], //with Noel
+            2011: ["Spain"], //Ibiza
+            2012: ["Lithuania"], //Moved back to Lithuania
+            2013: ["Ireland"], //Moved back to Ireland
+            2014: ["Spain"], //Ibiza 2
+            2015: ["Spain"], //VMworld Barcelona
+            2016: ["Denmark", "France", "United Kingdom", "France", "Denmark", "Lithuania"], // Copenhagen, Archachon, Work Trip UK and Paris
+            2017: ["United States of America", "Spain", "Netherlands", "Lithuania"], //San Francisco, Primavera#1, 4x ING trip to Amsterdam
+            2018: ["Italy", "Netherlands", "Spain", "United States of America"], //Como, Rotterdam, Primavera#2, Rhode Island 
+            2019: ["Scotland", "Switzerland", "Poland", "Spain"], //Primavera#3
+            2020: ["Thailand", "Laos", "Vietnam", "Cambodia", "Malaysia"],
+            2021: ["Portugal", "Netherlands"],
+            2022: ["Netherlands","Scotland", "Spain"], //Primavera4
+            2023: ["Netherlands","Japan", "Malta"],
+            2024: ["Germany", "Austria", "Jordan", "Sri Lanka", "Philippines", "South Korea", "Japan", "Thailand", "France"]
+        };
+
+        let geojsonLayer = null; // To hold the current highlighted countries
+
+        // Fetch GeoJSON data once and reuse it
+        let geojsonData = null;
+        fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
+            .then(response => response.json())
+            .then(data => {
+                geojsonData = data;
+                highlightCountries(1989); // Highlight initial year
+            });
+
+// Highlight visited countries up to the selected year
+const highlightCountries = (currentYear) => {
+    // Collect all visited countries up to the current year
+    const visitData = {}; // Store visit details: { country: { count, years } }
+    for (let year = 1989; year <= currentYear; year++) {
+        if (travelData[year]) {
+            travelData[year].forEach((country) => {
+                if (!visitData[country]) {
+                    visitData[country] = { count: 0, years: [] };
+                }
+                visitData[country].note = country === "Lithuania" ? "Birthplace" : (country === "Ireland" && year >= 2009) ? "Moved here in 2009" : null;
+
+                visitData[country].count += 1;
+                visitData[country].years.push(year);
+            });
+        }
+    }
+
+    // Remove the old layer if it exists
+    if (geojsonLayer) {
+        map.removeLayer(geojsonLayer);
+    }
+
+    // Filter GeoJSON to include only visited countries
+    const filteredGeoJSON = {
+        type: "FeatureCollection",
+        features: geojsonData.features.filter(feature =>
+            visitData[feature.properties.name]
+        )
+    };
+
+    // Add the filtered GeoJSON layer to the map with tooltips
+    geojsonLayer = L.geoJSON(filteredGeoJSON, {
+        style: {
+            color: "#48c400", // Single color for visited countries
+            weight: 2,
+            fillOpacity: 0.5
+        },
+        onEachFeature: (feature, layer) => {
+            const country = feature.properties.name;
+            const visitInfo = visitData[country];
+            if (visitInfo) {
+                const tooltipContent = `
+                    <strong>${country}</strong><br>
+                    Visits: ${visitInfo.count}<br>
+                    Years: ${visitInfo.years.join(", ")}
+                `;
+                layer.bindTooltip(tooltipContent, { sticky: true });
+            }
+        }
+    }).addTo(map);
+
+    // Update the country counter
+    document.getElementById('country-count').textContent = Object.keys(visitData).length;
+};
+
+
+        // Update map on slider change
+        const yearSlider = document.getElementById('year-slider');
+        const selectedYear = document.getElementById('selected-year');
+        yearSlider.addEventListener('input', () => {
+            const year = parseInt(yearSlider.value);
+            selectedYear.textContent = year;
+            highlightCountries(year); // Update highlighted countries
+        });
+
+        let countryCodeMap = {}; // To store the mapping between country names and ISO codes
+
+// Fetch country codes from FlagCDN
+fetch('https://flagcdn.com/en/codes.json')
+    .then(response => response.json())
+    .then(data => {
+        countryCodeMap = Object.fromEntries(
+            Object.entries(data).map(([code, name]) => [name.toLowerCase(), code])
+        );
+
+        // Ensure the bar chart populates correctly after fetching the codes
+        createFlagBarChart(yearSlider.value);
+    })
+    .catch(error => console.error("Error fetching country codes:", error));         
+
+        // Function to create the flag bar chart
+        const createFlagBarChart = (currentYear) => {
+    const visitCounts = {};
+    for (let year = 1989; year <= currentYear; year++) {
+        if (travelData[year]) {
+            travelData[year].forEach((country) => {
+                visitCounts[country] = (visitCounts[country] || 0) + 1;
+            });
+        }
+    }
+
+    // Clear existing chart
+    const chartContainer = document.getElementById("flag-bar-chart");
+    chartContainer.innerHTML = "";
+
+    // Generate bars for each country
+    Object.keys(visitCounts).forEach((country) => {
+        const code = getCountryCode(country); // Fetch ISO code dynamically
+        if (code === "unknown") {
+            console.warn(`No code found for country: ${country}`);
+            return; // Skip countries without a valid code
+        }
+
+        const bar = document.createElement("div");
+        bar.className = "flag-bar";
+
+        // Add flags for the country
+        for (let i = 0; i < visitCounts[country]; i++) {
+            const flag = document.createElement("img");
+            flag.src = `https://flagcdn.com/w40/${code}.png`;
+            flag.alt = `${country} Flag`;
+            bar.appendChild(flag);
+        }
+
+        // Add country label
+        const label = document.createElement("span");
+        label.textContent = country;
+        bar.appendChild(label);
+
+        chartContainer.appendChild(bar);
+    });
+};
+// Utility function to map country names to ISO 3166-1 alpha-2 codes
+const getCountryCode = (country) => {
+    return countryCodeMap[country.toLowerCase()] || "unknown"; // Return "unknown" if not found
+};
+
+
+// Call the function whenever the slider value changes
+yearSlider.addEventListener("input", () => {
+    const year = parseInt(yearSlider.value);
+    createFlagBarChart(year); // Update flag bar chart
+});
+
+
+// Toggle chart visibility
+document.getElementById("toggle-chart-btn").addEventListener("click", () => {
+    const chartContainer = document.getElementById("flag-bar-chart");
+    const toggleButton = document.getElementById("toggle-chart-btn");
+
+    if (chartContainer.style.display === "none") {
+        chartContainer.style.display = "flex"; // Show the chart
+        toggleButton.textContent = "Hide Flag Bar Chart";
+
+        // Add a delay to let layout stabilize before populating
+        setTimeout(() => {
+            createFlagBarChart(yearSlider.value);
+        }, 100); // Adjust delay as needed
+    } else {
+        chartContainer.style.display = "none"; // Hide the chart
+        toggleButton.textContent = "Show Flag Bar Chart";
+    }
+});
+
+    </script>
+
+
+
+<footer>
+    <div class="footer-container">
+        <p>Explore Other Versions:</p>
+        <ul class="footer-links">
+            <li><a href="version1.html">v1</a></li>
+            <li><a href="version2.html">v2</a></li>
+            <li><a href="version3.html">v3</a></li>
+            <li><a href="version4.html">v4</a></li>
+            <li><a href="version5.html">v5</a></li>
+            <li><a href="version_latest.html">Current Version</a></li>
         </ul>
-    </main>
+    </div>
+</footer>
+
 </body>
 </html>

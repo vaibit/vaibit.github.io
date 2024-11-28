@@ -153,27 +153,53 @@ body {
 
 
 
-/* Define a list of colors */
+/* Define colors for the letters */
 :root {
-  --color-1: #8181b3;
-  --color-2: #bd9ea9;
-  --color-3: #b3a1c5;
-  --color-4: #b381a3;
+  --color-1: #44af69;
+  --color-2: #f8333c;
+  --color-3: #fcab10;
+  --color-4: #2b9eb3;
 }
 
-/* Apply colors based on nth-child rules */
-.magnet h1.letters-style:nth-child(4n+1) {
-  color: var(--color-1) !important;
+/* Base styles for letters */
+.letters-style {
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 900;
+  font-size: 2rem;
+  margin: 10px;
+  cursor: grab;
+  text-transform: uppercase;
+  display: inline-block;
 }
 
-.magnet h1.letters-style:nth-child(4n+2) {
-  color: var(--color-2) !important;
+/* Apply colors and random rotation */
+.letters-style:nth-child(4n+1) {
+  color: var(--color-1);
+  transform: rotate(-10deg);
 }
 
-.magnet h1.letters-style:nth-child(4n+3) {
-  color: var(--color-3) !important;
+.letters-style:nth-child(4n+2) {
+  color: var(--color-2);
+  transform: rotate(10deg);
 }
 
-.magnet h1.letters-style:nth-child(4n+4) {
-  color: var(--color-4) !important;
+.letters-style:nth-child(4n+3) {
+  color: var(--color-3);
+  transform: rotate(-5deg);
+}
+
+.letters-style:nth-child(4n+4) {
+  color: var(--color-4);
+  transform: rotate(5deg);
+}
+
+
+.category {
+  display: none; /* All categories are hidden by default */
+}
+
+.category.active {
+  display: flex; /* Only active category is displayed */
+  flex-wrap: wrap;
+  gap: 10px;
 }

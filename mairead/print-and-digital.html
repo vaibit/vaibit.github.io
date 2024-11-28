@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print & Digital - Miaca Design</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <a href="index.html">Print/Digital</a>
+                <a href="motion.html">Motion</a>
+                <a href="logos.html">Logos</a>
+                <a href="personal.html">Personal</a>
+            </div>
+            <div class="center-nav">
+                <h1><a href="index.html">miaca design</a></h1>
+            </div>
+            <div class="right-nav">
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <!-- Ahascragh Distillery Section -->
+        <section class="project">
+            <h2 class="project-title">Ahascragh Distillery</h2>
+            <h3 class="project-subtitle">Tour Brochure & Recipe Card</h3>
+            <p class="project-description">
+                Examples of some print work I've designed for Ahascragh Distillery and their whiskey brand, UAIS.
+            </p>
+            <div class="project-images">
+                <img src="images/print-and-digital/ahascragh-1.jpg" alt="Ahascragh Brochure">
+                <img src="images/print-and-digital/ahascragh-2.jpg" alt="Ahascragh Recipe Card">
+            </div>
+        </section>
+        <!-- Separator -->
+        <div class="separator"></div>
+
+        <!-- Kerry College Section -->
+        <section class="project">
+            <h2 class="project-title">Kerry College</h2>
+            <h3 class="project-subtitle">2024 Prospectus Cover Concepts</h3>
+            <p class="project-description">
+                These concepts weren't chosen but I still really enjoyed making them and I am proud of how they turned out. 
+                I wanted to convey a sense of excitement as well as showcase the different types of courses available in the college. 
+                I used gradients and a patterned background for visual interest and kept the building as close to the real college as I could.
+            </p>
+            <div class="project-images">
+                <img src="images/print-and-digital/kerry-1.jpg" alt="Kerry College Concept 1">
+                <img src="images/print-and-digital/kerry-2.jpg" alt="Kerry College Concept 2">
+            </div>
+        </section>
+
+        <!-- Separator -->
+        <div class="separator"></div>
+
+        <!-- Ads and banners Section -->
+        <section class="custom-gallery">
+            <h2>Digital Ads and Banners</h2>
+            <div class="gallery-grid">
+                <!-- Top Row -->
+                <img src="images/print-and-digital/banner-1.gif" alt="Banner 1" class="top-banner">
+        
+        <!-- Second Row -->
+        <div class="second-row-left">
+            <img src="images/print-and-digital/digital-ad-desktop-1.jpg" alt="Desktop Ad 1">
+        </div>
+        <div class="second-row-right">
+            <img src="images/print-and-digital/banner-mobile.gif" alt="Mobile Banner">
+            <img src="images/print-and-digital/digital-ad-mobile-1.jpg" alt="Mobile Ad 1">
+        </div>
+            <!-- Bottom Row -->
+            <img src="images/print-and-digital/banner-2.gif" alt="Banner 2" class="bottom-banner">
+            </div>
+        </section>   
+
+            <!-- Separator -->
+            <div class="separator"></div>
+
+        <!-- Other Work Section -->
+        <section class="slideshow-gallery">
+            <h2>Other Print Projects I've Worked On</h2>
+            <div class="slideshow-container">
+                <!-- Slide 1 -->
+                <div class="slide active">
+                    <img src="images/print-and-digital/slideshow-1.jpg" alt="Gallery Image 1">
+                </div>
+        
+                <!-- Slide 2 -->
+                <div class="slide">
+                    <img src="images/print-and-digital/slideshow-2.jpg" alt="Gallery Image 2">
+                </div>
+        
+                <!-- Slide 3 -->
+                <div class="slide">
+                    <img src="images/print-and-digital/slideshow-3.jpg" alt="Gallery Image 3">
+                </div>
+        
+                <!-- Slide 4 -->
+                <div class="slide">
+                    <img src="images/print-and-digital/slideshow-4.jpg" alt="Gallery Image 4">
+                </div>
+        
+                <!-- Slide 5 -->
+                <div class="slide">
+                    <img src="images/print-and-digital/slideshow-5.jpg" alt="Gallery Image 5">
+                </div>
+        
+                <!-- Slide 6 -->
+                <div class="slide">
+                    <img src="images/print-and-digital/slideshow-6.jpg" alt="Gallery Image 6">
+                </div>
+        
+                <!-- Slide 7 -->
+                <div class="slide">
+                    <img src="images/print-and-digital/slideshow-7.jpg" alt="Gallery Image 7">
+                </div>
+                <!-- Navigation Buttons -->
+                <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+                <button class="next" onclick="moveSlide(1)">&#10095;</button>
+            </div>
+        
+            <!-- Dots for Navigation -->
+            <div class="dots-container">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+                <span class="dot" onclick="currentSlide(4)"></span>
+                <span class="dot" onclick="currentSlide(5)"></span>
+                <span class="dot" onclick="currentSlide(6)"></span>
+                <span class="dot" onclick="currentSlide(7)"></span>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="footer-logo">
+            <img src="images//logo-round.png" alt="Logo">
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Work</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="social-icons">
+            <a href="#">BlueSky</a>
+            <a href="#">Behance</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Substack</a>
+        </div>
+    </footer>
+
+    <script>
+    let currentIndex = 0;
+
+    function showSlide(index) {
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+
+        // Wrap index for infinite looping
+        if (index >= slides.length) currentIndex = 0;
+        else if (index < 0) currentIndex = slides.length - 1;
+        else currentIndex = index;
+
+        // Hide all slides and deactivate dots
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+
+        // Show current slide and activate corresponding dot
+        slides[currentIndex].classList.add('active');
+        dots[currentIndex].classList.add('active');
+    }
+
+    function moveSlide(step) {
+        showSlide(currentIndex + step);
+    }
+
+    function currentSlide(index) {
+        showSlide(index - 1); // Adjust for zero-based index
+    }
+
+    // Initialize the first slide
+    showSlide(0);
+</script>
+
+
+</body>
+</html>

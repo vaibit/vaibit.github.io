@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Existing head content -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miaca Design Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <a href="print-and-digital.html">Print/Digital</a>
+                <a href="#">Motion</a>
+                <a href="#">Logos</a>
+                <a href="#">Personal</a>
+            </div>
+            <div class="spacer"></div> <!-- Spacer to balance the layout -->
+            <div class="center-nav">
+                <h1><a href="index.html">miaca design</a></h1>
+            </div>
+            <div class="right-nav">
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="hamburger-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+        <div class="mobile-menu">
+            <a href="#">Print/Digital</a>
+            <a href="#">Motion</a>
+            <a href="#">Logos</a>
+            <a href="#">Personal</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </div>
+    </header>
+
+
+    <main>
+        <div class="image-grid">
+            <img src="images/home-images/image-1.jpg" alt="Portfolio image 1">
+            <img src="images/home-images/image-2.jpg" alt="Portfolio image 2">
+            <img src="images/home-images/image-3.jpg" alt="Portfolio image 3">
+            <img src="images/home-images/image-4.jpg" alt="Portfolio image 4">
+        </div>
+    </main>
+    <footer>
+        <!-- Footer content remains the same -->
+        <div class="footer-logo">
+            <img src="images/logo-round.png" alt="Logo">
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Work</a>
+            <a href="about.html">About</a>
+            <a href="#">Blog</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="social-icons">
+            <a href="#">BlueSky</a>
+            <a href="#">Behance</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Substack</a>
+        </div>
+    </footer>
+
+    <script>
+        const hamburger = document.querySelector('.hamburger-menu');
+        const mobileMenu = document.querySelector('.mobile-menu');
+    
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        //Hide .html redirects:
+        if (window.location.pathname.endsWith(".html")) {
+    window.history.replaceState(null, "", window.location.pathname.replace(".html", ""));
+}
+
+    </script>
+    
+</body>
+</html>

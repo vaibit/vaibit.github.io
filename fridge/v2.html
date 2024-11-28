@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fridge Magnets</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="fridge-area">
+        <div id="fridge">
+          <p>Drop magnets here</p>
+        </div>
+        <div id="storage">
+          <h3>Magnet Storage</h3>
+          <div id="magnet-container">
+            <div class="magnet" draggable="true">
+              <img src="magnets/amsterdam.png" alt="amsterdam" class="country-image">
+            </div>
+            <div class="magnet" draggable="true">
+              <img src="magnets/austria.png" alt="austria" class="country-image">
+            </div>
+          </div>
+        </div>
+      </div>
+  <button id="reset-button">Reset</button>
+  
+  <script>
+    const fridge = document.getElementById('fridge');
+const magnets = document.querySelectorAll('.magnet');
+
+// Add drag-and-drop functionality to magnets
+magnets.forEach(magnet => {
+  magnet.addEventListener('dragstart', dragStart);
+  magnet.addEventListener('dragend', dragEnd);
+});
+
+fridge.addEventListener('dragover', dragOver);
+fridge.addEventListener('drop', drop);
+
+let draggedMagnet = null;
+
+function dragStart(e) {
+  draggedMagnet = e.target;
+  e.dataTransfer.setData('text/plain', '');
+  draggedMagnet.style.opacity = '0.5';
+}
+
+function dragEnd() {
+  if (draggedMagnet) {
+    draggedMagnet.style.opacity = '1';
+  }
+}
+
+function dragOver(e) {
+  e.preventDefault(); // Allow drop
+}
+
+function drop(e) {
+  e.preventDefault();
+  const fridgeRect = fridge.getBoundingClientRect();
+  const x = e.clientX - fridgeRect.left - draggedMagnet.offsetWidth / 2;
+  const y = e.clientY - fridgeRect.top - draggedMagnet.offsetHeight / 2;
+
+  draggedMagnet.style.position = 'absolute';
+  draggedMagnet.style.left = `${x}px`;
+  draggedMagnet.style.top = `${y}px`;
+  fridge.appendChild(draggedMagnet);
+}
+  </script>
+</body>
+</html>

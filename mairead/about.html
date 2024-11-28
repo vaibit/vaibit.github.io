@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Existing head content -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miaca Design Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <a href="#">Print/Digital</a>
+                <a href="#">Motion</a>
+                <a href="#">Logos</a>
+                <a href="#">Personal</a>
+            </div>
+            <div class="spacer"></div> <!-- Spacer to balance the layout -->
+            <div class="center-nav">
+                <h1><a href="index.html">miaca design</a></h1>
+            </div>
+            <div class="right-nav">
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="hamburger-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+        <div class="mobile-menu">
+            <a href="#">Print/Digital</a>
+            <a href="#">Motion</a>
+            <a href="#">Logos</a>
+            <a href="#">Personal</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </div>
+    </header>
+    <main>
+        <section class="about-section">
+            <div class="profile-photo">
+                <img src="images/profile.png" alt="Profile Photo">
+            </div>
+            <div class="about-text">
+                <h2>About Me</h2>
+                <p>
+                    Born in Derby, raised in Thurles, and now based in Cork. After completing my degree in Visual Communication, 
+                    my design journey has taken me from in-house teams to freelancing and agency work. With each project, 
+                    I aim to create thoughtful, visually engaging solutions that connect with people.
+                </p>
+                <p>
+                    Outside the design world, you’ll likely find me immersed in creative side projects, working out, catching up with friends and family, or diving into new music. 
+                    Travel is another big passion of mine—I recently returned from a memorable backpacking trip through Jordan and around Asia.
+                </p>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-logo">
+            <img src="images/logo-round.png" alt="Logo">
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Work</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="social-icons">
+            <a href="#">BlueSky</a>
+            <a href="#">Behance</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Substack</a>
+        </div>
+    </footer>
+
+    <script>
+    //Hide .html redirects:
+    if (window.location.pathname.endsWith(".html")) {
+    window.history.replaceState(null, "", window.location.pathname.replace(".html", ""));
+    }
+
+    </script>
+</body>
+</html>

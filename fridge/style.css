@@ -182,6 +182,8 @@ body {
 }
 
 /* Apply colors and random rotation */
+/*Idea taken from https://codepen.io/cassie-codes/pen/vWgzoK */
+
 .letters-style:nth-child(4n+1) {
   color: var(--color-1);
   transform: rotate(-10deg);

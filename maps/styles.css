@@ -18,101 +18,7 @@ body {
     padding: 20px;
 }
 
-/*Mobile friendly*/
-@media (max-width: 768px) {
-    #map {
-        height: 300px;
-    }
-    .footer-links {
-        flex-wrap: wrap;
-    }
-    .footer-links li {
-        margin: 5px;
-    }
-}
 
-/* Media query for devices smaller than 768px */
-@media (max-width: 768px) {
-    .slider-container {
-        padding: 10px;
-    }
-
-    #slider-image {
-        width: 30px; /* Smaller slider image */
-    }
-
-    #chart-toggle-container {
-        margin: 10px auto;
-    }
-
-    #flag-bar-chart {
-        display: flex;
-        flex-wrap: wrap; /* Wrap bars on smaller screens */
-        justify-content: flex-start; /* Align bars to the left */
-        align-items: flex-end; /* Align flags at the bottom */
-        gap: 5px; /* Reduce gaps between bars */
-        margin: 10px auto;
-        padding: 10px;
-        max-width: 100%; /* Full width on mobile */
-        height: auto; /* Dynamic height */
-    }
-    
-    .flag-bar {
-        width: calc(10vw - 5px); /* Responsive width */
-        max-width: 40px; /* Prevent bars from growing too large */
-        text-align: center;
-    }
-    
-    .flag-bar img {
-        width: 100%; /* Match bar width */
-        max-height: 20px; /* Smaller flags for compact look */
-        margin: 1px 0; /* Minimal spacing */
-        object-fit: cover; /* Ensure no distortion */
-        border-radius: 2px; /* Optional rounded corners */
-    }
-    
-.flag-bar span {  /* Country names */
-    font-size: 0.2em; /* Compact text for ISO codes */
-    font-weight: bold;
-    margin-top: 2px;
-    word-wrap: break-word; /* Handle long text */
-    text-align: center;
-
-    }
-
-    .footer-links {
-        flex-wrap: wrap; /* Stack footer links */
-        gap: 10px;
-    }
-
-    .footer-links li {
-        width: 100%;
-        text-align: center; /* Center align links */
-    }
-
-    .counter {
-        font-size: 1em; /* Reduce counter size */
-    }
-}
-
-/* Media query for devices smaller than 480px */
-@media (max-width: 480px) {
-    #map {
-        height: 200px; /* Further reduce map height */
-    }
-
-    .slider-container {
-        flex-direction: column; /* Stack slider components */
-    }
-
-    #flag-bar-chart {
-        flex-direction: column; /* Stack bars vertically */
-    }
-
-    .flag-bar {
-        width: 30px; /* Further reduce bar width */
-    }
-}
 
  /*********************************************** SLIDER **********************************************/ 
 
@@ -200,9 +106,7 @@ body {
     margin: 20px auto;
     padding: 60px;
     max-width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    height: 200px; /* Set a fixed height for the chart */
+
 }
 
 .flag-bar {
@@ -307,4 +211,66 @@ footer {
     color: #fff;
     background-color: #FFD700;
     border-color: #FFD700;
+}
+
+
+
+/* Mobile Layout: Stack countries in a column on the left, flags extend horizontally */
+@media (max-width: 768px) {
+    /* Modify the flag bar chart layout */
+    #flag-bar-chart {
+        display: flex;
+        flex-direction: column; /* Stack the countries vertically */
+        align-items: flex-start; /* Align flags to the left */
+        gap: px; /* Space between the rows */
+        margin: 20px auto;
+        padding: 10px;
+        max-width: 100%;
+        height: auto; /* Let the height adjust dynamically */
+    }
+
+    /* Each country’s flags (bar) layout */
+    .flag-bar {
+        display: flex; /* Use flex layout */
+        flex-direction: row; /* Ensure flags align horizontally */
+        align-items: center; /* Vertically align country name and flags */
+        flex-shrink: 0; /* Prevent the label from shrinking */
+        gap: 5px; /* Space between the country name and the flags */
+        height: 30px; /* Fixed height for consistency */
+    }
+
+    /* Country labels (ISO codes) */
+    .flag-bar span {
+        font-size: 0.em; /* Smaller text for mobile */
+        font-weight: bold;
+        width: 50px; /* Set fixed width for country codes */
+        margin-right: 0px; /* Space between the country label and flags */
+        margin: 0; /* Remove any extra margin */
+        text-align: left; /* Align text to the left */
+        white-space: nowrap; /* Prevent wrapping */
+    }
+
+    /* Flags (scale them for mobile) */
+    .flag-bar img {
+        width: 25px; /* Fixed width for the flags */
+        height: auto; /* Maintain aspect ratio */
+        margin: 0; /* Remove extra spacing */
+        border-radius: 2px; /* Optional rounded corners */
+        object-fit: cover;
+    }
+
+    /* Footer links adjustments for mobile */
+    .footer-links {
+        flex-wrap: wrap; /* Stack footer links */
+        gap: 10px;
+    }
+
+    .footer-links li {
+        width: 100%; /* Make each footer item take up the full width */
+        text-align: center; /* Center align the links */
+    }
+
+    .counter {
+        font-size: 1em; /* Adjust the counter size */
+    }
 }

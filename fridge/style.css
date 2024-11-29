@@ -114,6 +114,9 @@ body {
   margin: 5px;
 }
 
+.magnet img {
+  pointer-events: none; /* Disable pointer events for images */
+}
 
 /* Styling for Countries (if needed) */
 .countries-style {

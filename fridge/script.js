@@ -146,3 +146,58 @@ categoryDropdown.addEventListener('change', (e) => {
     populateMagnets(selectedCategory);
   }
 });
+
+
+// Touch event handlers for mobile devices
+let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+function touchStart(e) {
+  const originalMagnet = e.target.closest('.magnet');
+  if (originalMagnet) {
+    if (originalMagnet.parentElement === magnetContainer) {
+      // Clone the magnet if dragged from storage
+      draggedMagnet = originalMagnet.cloneNode(true);
+      draggedMagnet.classList.add('fridge-magnet');
+      draggedMagnet.style.position = 'absolute';
+      fridge.appendChild(draggedMagnet); // Add to fridge immediately
+    } else {
+      // Drag existing magnet in the fridge
+      draggedMagnet = originalMagnet;
+    }
+
+    const touch = e.touches[0];
+    draggedMagnet.style.opacity = '0.5'; // Visual feedback
+    draggedMagnet.startX = touch.clientX;
+    draggedMagnet.startY = touch.clientY;
+    draggedMagnet.offsetX = parseInt(draggedMagnet.style.left || 0, 10);
+    draggedMagnet.offsetY = parseInt(draggedMagnet.style.top || 0, 10);
+  }
+}
+
+function touchMove(e) {
+  if (draggedMagnet) {
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - draggedMagnet.startX;
+    const deltaY = touch.clientY - draggedMagnet.startY;
+
+    draggedMagnet.style.left = `${draggedMagnet.offsetX + deltaX}px`;
+    draggedMagnet.style.top = `${draggedMagnet.offsetY + deltaY}px`;
+  }
+}
+
+function touchEnd() {
+  if (draggedMagnet) {
+    draggedMagnet.style.opacity = '1'; // Reset opacity
+    draggedMagnet = null; // Clear reference
+  }
+}
+
+// Add touch or mouse event listeners
+if (isTouchDevice) {
+  fridge.addEventListener('touchstart', touchStart, { passive: false });
+  fridge.addEventListener('touchmove', touchMove, { passive: false });
+  fridge.addEventListener('touchend', touchEnd);
+} else {
+  fridge.addEventListener('dragover', (e) => e.preventDefault());
+  fridge.addEventListener('drop', dropOnFridge);
+}

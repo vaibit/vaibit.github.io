@@ -1,12 +1,18 @@
 @import url('https://fonts.googleapis.com/css?family=Work+Sans:900');
 
-body {
+/* Base reset for margin and padding */
+body, html {
   margin: 0;
-  font-family: Arial, sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+body {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
+  justify-content: flex-start; /* Align elements at the top */
   background-color: #f2f2f2;
 }
 
@@ -202,4 +208,85 @@ body {
   display: flex; /* Only active category is displayed */
   flex-wrap: wrap;
   gap: 10px;
+}
+
+
+@media (max-width: 1024px) {
+  
+  #fridge-area {
+    flex-direction: column; /* Stack fridge and storage vertically */
+    align-items: center;
+    height: auto;
+    padding: 20px;
+  }
+
+  #fridge {
+    width: 0%; /* Fridge takes more space */
+    height: 400px; /* Increase height for emphasis */
+    margin-right: 0;
+    margin-bottom: 20px; /* Spacing between fridge and storage */
+  }
+
+  #fridge .door {
+    margin: 5px; /* Maintain aesthetic spacing for doors */
+  }
+
+  #fridge .door-handle {
+    width: 10px;
+    height: 40px; /* Keep the handle proportional */
+    right: 10px;
+  }
+
+  #storage {
+    width: 70%; /* Storage takes less space */
+    height: auto;
+    padding: 10px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  #storage h3 {
+    font-size: 1rem; /* Adjust heading size */
+  }
+}
+
+@media (max-width: 768px) {
+  #fridge {
+    width: 5%; /* Fridge dominates on smaller screens */
+    height: 350px;
+  }
+
+  #fridge .door-handle {
+    width: 8px; /* Adjust handle size */
+    height: 35px;
+  }
+
+  #storage {
+    width: 65%; /* Storage reduced further */
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  #fridge {
+    width: 90%; /* Nearly full screen for fridge */
+    height: 600px; /* Compact height */
+  }
+
+  #fridge .door-handle {
+    width: 6px;
+    height: 30px; /* Adjust handle for compact layout */
+  }
+
+  #storage {
+    width: 100%; /* Minimized storage */
+    padding: 6px;
+  }
+
+  #storage h3 {
+    font-size: 0.9rem; /* Smaller heading for small screens */
+  }
 }

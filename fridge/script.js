@@ -51,6 +51,9 @@ function populateMagnets(category) {
       magnetImg.alt = magnet.split('.')[0];
       magnetImg.className = 'country-image';
 
+    // Prevent image default drag behavior
+    magnetImg.addEventListener('dragstart', (e) => e.preventDefault());
+
       magnetDiv.appendChild(magnetImg);
     } else if (category === 'emojis') {
       // Emojis are just text

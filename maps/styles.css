@@ -122,13 +122,14 @@ body {
     height: auto;
     max-height: 30px; /* Fixed height for flags */
     margin: 2px 0; /* Add spacing between flags */
-    border: 1px solid #ddd;
+    border: 1px solid #000000;
     border-radius: 2px;
+    
 }
 
 .flag-bar span {
     position: absolute;
-    margin: -10px;
+    margin: -12px;
     bottom: -20px;
     font-size: 0.8em;
     font-weight: bold;

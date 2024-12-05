@@ -107,6 +107,46 @@ function updateCountryOptions() {
     document.getElementById('country').value = "";
 }
 
+function addCountryMarkers(countries) {
+    if (markerGroup) {
+        markerGroup.clearLayers();
+    }
+    markerGroup = L.layerGroup();
+
+    countries.forEach(country => {
+        const [lat, lng] = country.latlng || [0, 0];
+
+        // Defensive checks for country properties
+        const name = country.name?.common || "N/A";
+        const flag = country.flags?.svg || "https://via.placeholder.com/50"; // Fallback flag image
+        const timezone = customTimezones[name] || (country.timezones ? country.timezones[0] : "UTC");
+        const localTime = getLocalTime(timezone);
+        const languages = country.languages ? Object.values(country.languages).join(", ") : "N/A";
+        const currency = country.currencies ? Object.keys(country.currencies).join(", ") : "N/A";
+        const population = country.population ? country.population.toLocaleString() : "N/A";
+
+        console.log("Processing country:", country); // Debugging line
+
+        // Add marker to the map
+        const marker = L.marker([lat, lng]).addTo(markerGroup);
+        marker.bindPopup(`
+            <div style="text-align: center;">
+                <h3>${name}</h3>
+                <img src="${flag}" alt="${name} flag" style="width: 50px; height: auto; margin: 10px 0;">
+            </div>
+            <div style="text-align: left;">
+                <p><strong>Language:</strong> ${languages}</p>
+                <p><strong>Currency:</strong> ${currency}</p>
+                <p><strong>Population:</strong> ${population}</p>
+                <p><strong>Timezone:</strong> ${timezone}</p>
+                <p><strong>Local Time:</strong> ${localTime}</p>
+            </div>
+        `);
+    });
+
+    markerGroup.addTo(map);
+}
+
 function filterCountries() {
     const region = document.getElementById("region").value;
     const subregion = document.getElementById("subregion").value;
@@ -142,33 +182,6 @@ function filterCountries() {
             map.flyTo([0, 0], 2, { duration: 1.5 }); // Default location
         }
     }
-}
-
-function addCountryMarkers(countries) {
-    if (markerGroup) {
-        markerGroup.clearLayers();
-    }
-    markerGroup = L.layerGroup();
-
-    countries.forEach(country => {
-        const [lat, lng] = country.latlng || [0, 0];
-
-        // Use custom timezone or fallback to default timezone
-        const timezone = customTimezones[country.name.common] || (country.timezones ? country.timezones[0] : "UTC");
-        const localTime = getLocalTime(timezone);
-        const marker = L.marker([lat, lng]).addTo(markerGroup);
-        marker.bindPopup(`
-            <div style="text-align: center;">
-                <h3>${country.name.common}</h3>
-                <img src="https://flagcdn.com/${country.cca2.toLowerCase()}.svg" alt="${country.name.common} flag" style="width: 50px; height: auto; margin: 10px 0;">
-                <p><strong>Population:</strong> ${country.population ? country.population.toLocaleString() : "N/A"}</p>
-                <p><strong>Timezone:</strong> ${country.timezones ? country.timezones[0] : "N/A"}</p>
-                <p><strong>Local Time:</strong> ${localTime}</p>
-            </div>
-        `);
-    });
-
-    markerGroup.addTo(map);
 }
 
 async function fetchCountryBorders() {

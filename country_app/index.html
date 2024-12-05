@@ -16,17 +16,14 @@
 
     <!-- Filter Dropdowns -->
     <div class="dropdown-container">
-        <label for="region">Region:</label>
         <select id="region" onchange="updateSubregionOptions(); updateCountryOptions();">
             <option value="">Select Region</option>
         </select>
         
-        <label for="subregion">Subregion:</label>
         <select id="subregion" onchange="updateCountryOptions()">
             <option value="">Select Subregion</option>
         </select>
 
-        <label for="country">Country:</label>
         <select id="country" onchange="filterCountries()">
             <option value="">Select Country</option>
         </select>

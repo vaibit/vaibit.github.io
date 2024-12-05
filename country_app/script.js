@@ -29,15 +29,22 @@ function resetMap() {
 
 // Populate initial data for dropdowns
 async function populateInitialData() {
-    const response = await fetch('https://restcountries.com/v3.1/all');
-    countries = await response.json();
+    const API_URL = "https://restcountries.com/v3.1/all?fields=name,flags,latlng,region,subregion,languages,currencies,population,timezones";
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        countries = await response.json();
+        
+        // Populate Region dropdown with unique values
+        const regions = Array.from(new Set(countries.map(country => country.region).filter(Boolean))).sort();
+        populateDropdown('region', regions);
 
-    // Populate Region dropdown with unique values
-    const regions = Array.from(new Set(countries.map(country => country.region).filter(Boolean))).sort();
-    populateDropdown('region', regions);
-
-    // Populate Country dropdown with all countries initially
-    updateCountryOptions();
+        // Populate Country dropdown initially with all country names
+        const countryNames = Array.from(new Set(countries.map(country => country.name.common).filter(Boolean))).sort();
+        populateDropdown('country', countryNames);
+    } catch (error) {
+        console.error("Failed to fetch country data:", error);
+    }
 }
 
 function populateDropdown(id, values) {

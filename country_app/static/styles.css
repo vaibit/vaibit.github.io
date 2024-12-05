@@ -22,6 +22,20 @@ h1 {
     font-size: 2em;
 }
 
+#info {
+    font-family: Georgia, serif;
+    font-size: 12px;
+    letter-spacing: 2.6px;
+    word-spacing: -1px;
+    color: #000000;
+    font-weight: 400;
+    text-decoration: none solid rgb(68, 68, 68);
+    font-style: normal;
+    font-variant: small-caps;
+    text-transform: none;
+
+}
+
 /* Form styling */
 select, input {
     padding: 8px;

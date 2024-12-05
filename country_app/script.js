@@ -108,35 +108,41 @@ function updateCountryOptions() {
 }
 
 function filterCountries() {
-const region = document.getElementById("region").value;
-const subregion = document.getElementById("subregion").value;
-const countryName = document.getElementById("country").value;
+    const region = document.getElementById("region").value;
+    const subregion = document.getElementById("subregion").value;
+    const countryName = document.getElementById("country").value;
 
-let filteredCountries = countries;
+    let filteredCountries = countries;
 
-if (region) {
-filteredCountries = filteredCountries.filter(country => country.region === region);
+    if (region) {
+        filteredCountries = filteredCountries.filter(country => country.region === region);
+    }
+
+    if (subregion) {
+        filteredCountries = filteredCountries.filter(country => country.subregion === subregion);
+    }
+
+    if (countryName) {
+        filteredCountries = filteredCountries.filter(country => country.name.common === countryName);
+    }
+
+    console.log("Filtered countries:", filteredCountries);
+
+    addCountryMarkers(filteredCountries);
+
+    // Center the map for single-country selection
+    if (filteredCountries.length === 1) {
+        const country = filteredCountries[0];
+        console.log("Selected country latlng:", country.latlng);
+
+        if (country.latlng && country.latlng.length === 2) {
+            map.flyTo([country.latlng[0], country.latlng[1]], 5, { duration: 1.5 });
+        } else {
+            console.warn("LatLng data missing, centering map to default.");
+            map.flyTo([0, 0], 2, { duration: 1.5 }); // Default location
+        }
+    }
 }
-
-if (subregion) {
-filteredCountries = filteredCountries.filter(country => country.subregion === subregion);
-}
-
-if (countryName) {
-filteredCountries = filteredCountries.filter(country => country.name.common === countryName);
-}
-
-addCountryMarkers(filteredCountries);
-
-
-// Center the map if a single country is selected
-if (filteredCountries.length === 1) {
-const country = filteredCountries[0];
-const [lat, lng] = country.latlng || [0, 0];
-map.flyTo([lat, lng], 5, { duration: 1.5 }); // 1.5 seconds animation
-}
-}
-
 
 function addCountryMarkers(countries) {
     if (markerGroup) {

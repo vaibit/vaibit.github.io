@@ -1,0 +1,67 @@
+<!-- Licenses: -->
+<!-- Mac OS Dock: -->
+<!-- Copyright (c) 2024 by Liam (https://codepen.io/Lierrmm/pen/PKEEGa)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Normal Conversation</title>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+      <div id="dock-container">
+       <div id="dock">
+         <ul>
+            <li>
+              <span>Address Book</span>
+              <a href="#"><img src="https://i.pinimg.com/originals/a7/1d/15/a71d15020c4a6c450439b504851ba01a.png"/></a>
+            </li>
+            <li>
+              <span>App Store</span>
+              <a href="#"><img src="https://cdn2.iconfinder.com/data/icons/ios7-inspired-mac-icon-set/1024/_app_store_5122x.png"/></a>
+            </li>
+           <li>
+           <span>Messages</span>
+              <a href="#"><img src="https://s-media-cache-ak0.pinimg.com/originals/25/9a/ba/259aba10dfd96cd06e490b4e8280f5db.jpg"/></a>
+           </li>
+            <li>
+            <span>Chrome</span>
+            <a href="#" onclick="opentab()"><img src="https://img.icons8.com/?size=100&id=ejub91zEY6Sl&format=png&color=000000"/</a>
+            </li>
+            <li>
+              <span>Discord</span>
+              <a href="#"><img src="https://vignette1.wikia.nocookie.net/logopedia/images/d/dd/Discord.png/revision/latest?cb=20160802133240"/></a>
+            </li>
+            <li>
+               <span>Trash</span>
+               <a href="#"><img src="https://cdn.osxdaily.com/wp-content/uploads/2010/07/512-TrashIcon-macosx1.png"/></a>
+            </li>
+         </ul>
+       </div>
+      </div>
+    <div class="mac-window">
+        <div class="mac-titlebar">
+            <div class="traffic-lights">
+                <span class="light red"></span>
+                <span class="light yellow"></span>
+                <span class="light green"></span>
+            </div>
+            <div class="window-title">Messages</div>
+        </div>
+        <div class="chat-window" id="chat-window">
+            <!-- Messages and typing indicators inserted dynamically -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+/*Licenses:
+Mac OS Dock:
+Copyright (c) 2024 by Liam (https://codepen.io/Lierrmm/pen/PKEEGa)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
+
+/* reset */
+@media only screen and (max-width: 768px) {
+
+  
+    #dock-container li {
+            list-style-type: none;
+            display: inline-block;
+            position: relative;
+        }
+   #dock-container li img {
+          width: 32px;
+          height: 32px;
+          -webkit-box-reflect: below 2px,
+          -webkit-gradient(linear, left top, left bottom, from(transparent),
+                    color-stop(0.7, transparent), to(rgba(255,255,255,.5)));
+          -webkit-transition: all 0.3s;
+          -webkit-transform-origin: 50% 100%;
+        }
+#dock-container li:hover img { 
+          -webkit-transform: scale(2);
+          margin: 0 2em;
+        }
+        #dock-container li:hover + li img,
+        #dock-container li.prev img {
+          -webkit-transform: scale(1.5);
+          margin: 0 1.5em;
+        }
+  #dock-container li span {
+            display: none;
+            position: absolute;
+            bottom: 140px;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0,0,0,0.75);
+            padding: 4px 0;
+            border-radius: 12px;
+        }
+        #dock-container li:hover span {
+            display: block;
+            color: #fff;
+        }
+        
+
+/********************************************************** chat window ********************************************/
+.mac-window {
+    position: absolute;
+    margin: 0;
+    width: 80vw;
+    height: 90vw;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(-80px); /* move it up by 30px */
+
+
+}
+
+/* Mac-style titlebar */
+.mac-titlebar {
+    height: 28px;
+    background: #f2f2f2;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+
+/* Modern Chat Window */
+.chat-window {
+    flex: 1;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f2f2f2;
+    scroll-behavior: smooth;
+   
+}
+
+/* Message Styles */
+.message {
+    max-width: 75%;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-break: break-word;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.3s forwards ease-in-out;
+}
+
+@keyframes blink {
+    0%, 80%, 100% {
+        opacity: 0;
+    }
+    40% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hide scrollbar in WebKit */
+.chat-window::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+.chat-window::after {
+    content: "";
+    display: block;
+    height: 20px;
+}
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {...}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {...}
+
+/* Medium devices (landscape tablets, 768px and up) */
+
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {...}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {...}

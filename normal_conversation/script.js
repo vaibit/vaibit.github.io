@@ -157,7 +157,29 @@ function simulateChat() {
         }
     }
 }
+// Prevent default touch behaviors and improve mobile interaction
+document.addEventListener('DOMContentLoaded', () => {
+    // Prevent double-tap zoom
+    let lastTap = 0;
+    document.body.addEventListener('touchend', (event) => {
+        const now = new Date().getTime();
+        if (now - lastTap < 300) {
+            event.preventDefault();
+        }
+        lastTap = now;
+    }, false);
 
+    // Make dock items more touch-friendly
+    const dockItems = document.querySelectorAll('#dock-container li');
+    dockItems.forEach(item => {
+        item.addEventListener('touchstart', (e) => {
+            e.currentTarget.classList.add('touched');
+        });
+        item.addEventListener('touchend', (e) => {
+            e.currentTarget.classList.remove('touched');
+        });
+    });
+});
 // Start the simulation after a short initial delay
 setTimeout(simulateChat, 1000);
 

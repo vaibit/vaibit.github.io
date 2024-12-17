@@ -1,5 +1,3 @@
-const API_KEY = 'b54b13e51ae45927fd115784aa8611cb';
-
 // Debounce function to limit API calls
 function debounce(func, delay) {
     let timeoutId;
@@ -44,7 +42,7 @@ async function searchMovies(query) {
 
     if (query.trim().length < 2) return [];
 
-    const searchUrl = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
+    const searchUrl = `https://tmdb-proxy-server.onrender.com/api/search/multi?query=${query}`;
     
     try {
         const response = await fetch(searchUrl);
@@ -111,7 +109,7 @@ function createAutocomplete(inputElement, suggestionsContainer) {
 }
 
 async function searchMovie(title) {
-    const searchUrl = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(title)}`;
+    const searchUrl = `https://tmdb-proxy-server.onrender.com/api/search/multi?query=${title}`;
     
     try {
         const response = await fetch(searchUrl);
@@ -126,7 +124,7 @@ async function searchMovie(title) {
 }
 
 async function getCredits(id, type) {
-    const creditsUrl = `https://api.themoviedb.org/3/${type}/${id}/credits?api_key=${API_KEY}`;
+    const creditsUrl = `https://tmdb-proxy-server.onrender.com/api/${type}/${id}/credits`;
     
     try {
         const response = await fetch(creditsUrl);

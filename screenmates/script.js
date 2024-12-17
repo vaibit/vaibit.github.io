@@ -92,7 +92,9 @@ function createAutocomplete(inputElement, suggestionsContainer) {
             `;
             
             suggestionElement.addEventListener('click', () => {
-                inputElement.value = suggestion.title;
+                inputElement.value = suggestion.title; // Set the movie title in the input
+                inputElement.dataset.movieId = suggestion.id; // Store the movie ID in the input's data attribute
+                console.log("Selected Movie ID:", suggestion.id); // Debug log to check the ID
                 suggestionsContainer.innerHTML = ''; // Clear suggestions
             });
             
@@ -257,6 +259,17 @@ async function compareMovies() {
     }
 }
 
+async function getMovieById(movieId) {
+    const movieUrl = `https://tmdb-proxy-server.onrender.com/api/movie/${movieId}`;
+    try {
+        const response = await fetch(movieUrl);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching movie:', error);
+        return null;
+    }
+}
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', () => {

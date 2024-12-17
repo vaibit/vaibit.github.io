@@ -92,10 +92,16 @@ function createAutocomplete(inputElement, suggestionsContainer) {
             `;
             
             suggestionElement.addEventListener('click', () => {
-                inputElement.value = suggestion.title; // Set the movie title in the input
-                inputElement.dataset.movieId = suggestion.id; // Store the movie ID in the input's data attribute
-                console.log("Selected Movie ID:", suggestion.id); // Debug log to check the ID
-                suggestionsContainer.innerHTML = ''; // Clear suggestions
+                inputElement.value = suggestion.title;
+                inputElement.dataset.movieId = suggestion.id;
+                inputElement.dataset.mediaType = suggestion.type; // Store the media type
+                console.log("Selected Movie/TV Details:", {
+                    id: suggestion.id,
+                    title: suggestion.title,
+                    type: suggestion.type,
+                    year: suggestion.year
+                });
+                suggestionsContainer.innerHTML = '';
             });
             
             suggestionsContainer.appendChild(suggestionElement);
@@ -111,16 +117,38 @@ function createAutocomplete(inputElement, suggestionsContainer) {
 }
 
 async function searchMovie(title) {
-    const searchUrl = `https://tmdb-proxy-server.onrender.com/api/search/multi?query=${title}`;
+    const searchUrl = `https://tmdb-proxy-server.onrender.com/api/search/multi?query=${encodeURIComponent(title)}`;
     
     try {
         const response = await fetch(searchUrl);
         const data = await response.json();
         
-        // Return the first result (most relevant)
-        return data.results[0];
+        // Log all results to help debug
+        console.log('Search Results:', data.results.map(result => ({
+            id: result.id,
+            title: result.title || result.name,
+            type: result.media_type,
+            year: result.release_date?.split('-')[0] || result.first_air_date?.split('-')[0]
+        })));
+        
+        return null; // Force manual selection
     } catch (error) {
         console.error('Error searching for movie:', error);
+        return null;
+    }
+}
+
+// Modify fetchMovieDetailsById to handle both movie and TV types
+async function fetchMovieDetailsById(movieId, mediaType) {
+    const detailsUrl = `https://tmdb-proxy-server.onrender.com/api/${mediaType}/${movieId}`; 
+    
+    try {
+        const response = await fetch(detailsUrl);
+        const data = await response.json();
+        
+        return data;  // Return the full movie/TV details
+    } catch (error) {
+        console.error(`Error fetching ${mediaType} details by ID:`, error);
         return null;
     }
 }
@@ -170,6 +198,7 @@ function findCommonCredits(credits1, credits2) {
     return commonCredits;
 }
 
+// Modify compareMovies to pass mediaType
 async function compareMovies() {
     const movie1Input = document.getElementById('movie1');
     const movie2Input = document.getElementById('movie2');
@@ -179,17 +208,28 @@ async function compareMovies() {
         // Show loading state
         showLoadingState(true);
         
-        // Search for both movies
-        const movie1 = await searchMovie(movie1Input.value);
-        const movie2 = await searchMovie(movie2Input.value);
+        // Validate that a specific selection was made
+        if (!movie1Input.dataset.movieId || !movie2Input.dataset.movieId) {
+            throw new Error('Please select movies from the suggestions list.');
+        }
+        
+        // Fetch movie/TV details using stored ID and type
+        const movie1 = await fetchMovieDetailsById(
+            movie1Input.dataset.movieId, 
+            movie1Input.dataset.mediaType
+        );
+        const movie2 = await fetchMovieDetailsById(
+            movie2Input.dataset.movieId, 
+            movie2Input.dataset.mediaType
+        );
         
         if (!movie1 || !movie2) {
             throw new Error('Could not find one or both of the movies/TV series.');
         }
         
-        // Get credits for both
-        const credits1 = await getCredits(movie1.id, movie1.media_type);
-        const credits2 = await getCredits(movie2.id, movie2.media_type);
+        // Get credits using stored ID and type
+        const credits1 = await getCredits(movie1.id, movie1Input.dataset.mediaType);
+        const credits2 = await getCredits(movie2.id, movie2Input.dataset.mediaType);
         
         if (!credits1 || !credits2) {
             throw new Error('Could not fetch credits for the movies/TV series.');
@@ -220,16 +260,14 @@ async function compareMovies() {
                 <div class="results-header">
                     <h2 class="results-title">Common Credits</h2>
                     <div class="separator">
-
                     <div class="credit-summary">
                         <div class="summary-stat">
                             <span class="stat-label">Total Common Credits:</span>
                             <span class="stat-value">${commonCredits.length}</span>
                         </div>
 <div class="separator">
-
                         <div class="summary-movies">
-                            <span class="stat-label">Movies:</span>
+                            <span class="stat-label">Movies/TV Series:</span>
                             <span class="stat-value">"${movie1.title || movie1.name}" and "${movie2.title || movie2.name}"</span>
                         </div>
                     </div>
@@ -259,17 +297,7 @@ async function compareMovies() {
     }
 }
 
-async function getMovieById(movieId) {
-    const movieUrl = `https://tmdb-proxy-server.onrender.com/api/movie/${movieId}`;
-    try {
-        const response = await fetch(movieUrl);
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching movie:', error);
-        return null;
-    }
-}
+
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', () => {
